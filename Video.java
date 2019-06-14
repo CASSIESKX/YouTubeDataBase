@@ -19,6 +19,11 @@ public class Video  implements Comparable<Video>{
 		this.views = views;
 	}
 	
+	/*** 3 Parameter Constructor ***/
+	public Video (String url, String name) {
+		this(url, name, "unknown publisher", "unknown year", "unknown views");
+	}
+	
 	/*** Setters ***/
 	public void setUrl(String url) {
 		this.url = url;
@@ -97,4 +102,14 @@ public class Video  implements Comparable<Video>{
     	}
     }
 	
+	//HashCode: The code is generalized based on both url and video name
+	@Override public int hashCode() {
+		String urlSubString = url.substring(url.indexOf("=")+1, url.length());
+        String key = urlSubString + name;
+        int sum = 0;
+        for (int i = 0; i < key.length(); i++) {
+            sum += (int) key.charAt(i);
+        }
+        return sum;
+    }
 }
