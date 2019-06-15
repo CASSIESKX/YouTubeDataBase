@@ -123,15 +123,23 @@ public class YouTubeDataBase {
 
 		}
 		System.out.println("\nGood Bye!");  // user enter x to exit the program
-		userInput.close();
-		fileRead.close();
-
+				
 		PrintWriter output = new PrintWriter(new File("output.txt"));
-		// write data to file
-		for (int i = 0; i < data.tableSize(); i++) {
-			
+		//open a file for read
+		for(int i = 0; i < data.tableSize(); i++) {
+			List<Video> videos = data.getElement(i);
+			videos.placeIterator();
+			// get through list get each video to print to file
+			for(int j = 0; j < videos.getLength(); j++) {
+				//write to a file
+				output.println(videos.getIterator());
+				videos.advanceIterator();
+			}
 		}
+		
 		output.close();
+		userInput.close();
+		fileRead.close();	
 	}
 
 	public static void printSelection() {
