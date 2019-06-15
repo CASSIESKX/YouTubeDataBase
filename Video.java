@@ -102,14 +102,20 @@ public class Video  implements Comparable<Video>{
     	}
     }
 	
-	//HashCode: The code is generalized based on both url and video name
-	@Override public int hashCode() {
+	public int hashCodeByUrl() {
 		String urlSubString = url.substring(url.indexOf("=")+1, url.length());
-        String key = urlSubString + name;
         int sum = 0;
-        for (int i = 0; i < key.length(); i++) {
-            sum += (int) key.charAt(i);
+        for (int i = 0; i < urlSubString.length(); i++) {
+            sum += (int) urlSubString.charAt(i);
         }
         return sum;
     }
+	
+	public int hashCodeByVideoName() {
+		int sum = 0;
+		for(int i = 0; i< name.length(); i++) {
+			sum += (int)name.charAt(i);
+		}
+		return sum;
+	}
 }
