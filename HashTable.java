@@ -160,7 +160,8 @@ public class HashTable<T extends Comparable<T>> {
         }
      }
     
-    
-
+    public List<T> getElement(int bucket){
+    	return Table.get(bucket);
+    } 
 	
 }
