@@ -74,14 +74,45 @@ public class YouTubeDataBase {
 				Video tempVideo = new Video (tempurl, tempname);
 				
 				//should call remove method to remove data
-				
+				if(data.search(tempVideo) == -1) {
+					System.out.println("The video you are looking for is not in the database! Exit Code: 1.");
+					System.exit(2);
+				}else {
+					bst.remove(tempVideo);
+            		data.remove(tempVideo);
+            		System.out.println("The video: " + tempVideo.getName() +"has been removed! ");
+				}
 			} else if (userChoice.equalsIgnoreCase("S")) {
+				//Sub menu here
+				System.out.println("Would you like to search using URL or video name?");
+				System.out.println("Enter U for URL, otherwise, the program will search by name! ");
+				String searchResponse = userInput.nextLine();
+				if(searchResponse.equalsIgnoreCase("u")) {
+					System.out.println("Now searching based on URL! ");
+					System.out.println("Enter the URL please :");
+					String urlFromUser = userInput.nextLine();
+					//SEARCH BY URL
+				}else {
+					System.out.println("Now searching based on video names! ");
+					System.out.println("Enter the video name please :");
+					String nameFromUser = userInput.nextLine();
+					//SEARCH BY NAME
+				}
 				System.out.println("");
 
 			} else if (userChoice.equalsIgnoreCase("L")) {
-				System.out.print("\n*** Here is the list ***");
-				bst.inOrderPrint(); // print table to display the full list
-
+				System.out.println("Now printing the database! ");
+				System.out.println("Enter 'U' to print unsorted data, ");
+				System.out.println("'R' to print the data sorted by URL,");
+				System.out.println("otherwise, the program willprint data sorted by video names.");
+				String printResponse = userInput.nextLine();
+				if(printResponse.equalsIgnoreCase("U")) {
+					data.printTable();
+				}else if(printResponse.equalsIgnoreCase("R")) {
+					//Print sorted by URL
+				}else {
+					//Print sorted by names
+				}
 			} else {
 				// Invalid input
 				System.out.println("\nInvalid Input!");
@@ -99,7 +130,6 @@ public class YouTubeDataBase {
 		// write data to file
 		for (int i = 0; i < data.tableSize(); i++) {
 			
-			output.println();
 		}
 		output.close();
 	}
