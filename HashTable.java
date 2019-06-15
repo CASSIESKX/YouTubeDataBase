@@ -54,7 +54,7 @@ public class HashTable<T extends Comparable<T>> {
 	public int countBucket(int index) throws IndexOutOfBoundsException {
 		// Handle Precondition
 		if (index < 0 || index > Table.size()) {
-			throw new IndexOutOfBoundsException("countBucket: Index out of bound.");
+			throw new IndexOutOfBoundsException("countBucket: Index out of bound.\n");
 		}
 		return Table.get(index).getLength();
 	}
@@ -80,13 +80,8 @@ public class HashTable<T extends Comparable<T>> {
 	 *         the Table
 	 */
 	public int search(T t) {
-		for (int i = 0; i < Table.size(); i++) {
-			if (Table.get(i).linearSearch(t) != -1) {
-				return i;
-			}
-		}
-		// Not in the table
-		return -1;
+		int code = hash(t);
+		return Table.get(code).linearSearch(t);
 	}
 
 	/** Manipulation Procedures */
@@ -98,10 +93,10 @@ public class HashTable<T extends Comparable<T>> {
 	 * @param t the element to insert
 	 */
 	public void insert(T t) {
+		numElements++;
 		// calls the hash method to determine placement
 		int index = hash(t);
 		Table.get(index).addLast(t);
-		numElements++;
 	}
 
 	/**
@@ -147,7 +142,7 @@ public class HashTable<T extends Comparable<T>> {
     	if(bucket < 0 || bucket > Table.size()) {
     		throw new IndexOutOfBoundsException ("printBucket: Index Out Of Bounds. \n");
     	}
-    		System.out.println("Printing bucket: " + bucket);
+    		System.out.println("Printing bucket #" + bucket +": ");
 			System.out.println(Table.get(bucket).toString());
     }
 
@@ -163,20 +158,15 @@ public class HashTable<T extends Comparable<T>> {
     public void printTable(){
         for(int i = 0 ; i < Table.size(); i++) {
         	if(Table.get(i).getLength() == 0) {
-        		System.out.print("Bucket: " + i);
-        		System.out.print("\nThis bucket is empty.");
-        		System.out.println();
-        		System.out.println();
+        		continue;
         	}else{
-        		Table.get(i).placeIterator();
-        		T temp = Table.get(i).getIterator();
-        		int numEle = Table.get(i).getLength() -1;
-        		System.out.print("\nBucket: " + i);
+        		T temp = Table.get(i).getFirst();
         		System.out.print(temp.toString());
-        		System.out.println("\n+ " + numEle + " more at this bucket. \n");
         	}
         }
      }
+    
+    
 
 	
 }
