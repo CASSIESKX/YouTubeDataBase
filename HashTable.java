@@ -1,9 +1,3 @@
-/**
- * HashTable.java
- * @author Kexin Shu
- * @author Yunting Lin
- * CIS 22C, Lab 7
- */
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
