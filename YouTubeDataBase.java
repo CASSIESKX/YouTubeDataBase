@@ -5,7 +5,8 @@ import java.io.*;
 
 public class YouTubeDataBase {
 	public static void main(String[] args) throws IOException {
-		HashTable<Video> data = new HashTable<Video>(75);
+		HashTable h1 = new HashTable(75, true);//HashTable by URL
+		HashTable h2 = new HashTable(75, false);//HashTable by video name
 		BST bst1 = new BST(true);//BST by URL
 		BST bst2 = new BST(false);//BST by video name
 
@@ -36,7 +37,8 @@ public class YouTubeDataBase {
 			views = fileRead.nextLine();
 
 			Video tempVideo = new Video(videoURL, videoName, publisher, year, views);
-			data.insert(tempVideo);
+			h1.insert(tempVideo);
+			h2.insert(tempVideo);
 			bst1.insert(tempVideo);
 			bst2.insert(tempVideo);
 		}
@@ -63,7 +65,8 @@ public class YouTubeDataBase {
 				System.out.print("Enter the views of the video: ");
 				tempviews = userInput.nextLine();
 				Video tempVideo = new Video (tempurl, tempname, temppublisher, tempyear, tempviews);
-				data.insert(tempVideo); // add to HashTable
+				h1.insert(tempVideo); // add to HashTable h1
+				h2.insert(tempVideo); // add to hashTable h2
 				bst1.insert(tempVideo); // add to BST1
 				bst2.insert(tempVideo); // add to BST1
 				System.out.println();
@@ -77,30 +80,47 @@ public class YouTubeDataBase {
 				Video tempVideo = new Video (tempurl, tempname);
 				
 				//should call remove method to remove data
-				if(data.search(tempVideo) == -1) {
-					System.out.println("The video you are looking for is not in the database! Exit Code: 1.");
-					System.exit(2);
+				if(h1.search(tempVideo) == -1) {
+					System.out.println("The video you are looking for is not in the database!");
+					//Why exit?
+					//System.out.println("The video you are looking for is not in the database! Exit Code: 1.");
+					//System.exit(2);
 				}else {
 					bst1.remove(tempVideo);
 					bst2.remove(tempVideo);
-            		data.remove(tempVideo);
+            		h1.remove(tempVideo);
+            		h2.remove(tempVideo);
             		System.out.println("The video: " + tempVideo.getName() +"has been removed! ");
 				}
 			} else if (userChoice.equalsIgnoreCase("S")) {
 				//Sub menu here
 				System.out.println("Would you like to search using URL or video name?");
 				System.out.println("Enter U for URL, otherwise, the program will search by name! ");
+				Video tempVideo = new Video();
 				String searchResponse = userInput.nextLine();
 				if(searchResponse.equalsIgnoreCase("u")) {
 					System.out.println("Now searching based on URL! ");
 					System.out.println("Enter the URL please :");
 					String urlFromUser = userInput.nextLine();
+					tempVideo.setUrl(urlFromUser);
+					if (h1.search(tempVideo) == -1) {
+						//Temp output
+						System.out.println("Cannot find video with url " + urlFromUser);
+					} else {
+						System.out.println("Video with url " + urlFromUser + " exists!");
+					}
 					//SEARCH BY URL
 				}else {
 					System.out.println("Now searching based on video names! ");
 					System.out.println("Enter the video name please :");
 					String nameFromUser = userInput.nextLine();
-					//SEARCH BY NAME
+					tempVideo.setName(nameFromUser);
+					if (h2.search(tempVideo) == -1) {
+						//Temp output
+						System.out.println("Cannot find video with name " + nameFromUser);
+					} else {
+						System.out.println("Video with name " + nameFromUser + " exists!");
+					}
 				}
 				System.out.println("");
 
@@ -111,7 +131,7 @@ public class YouTubeDataBase {
 				System.out.println("otherwise, the program willprint data sorted by video names.");
 				String printResponse = userInput.nextLine();
 				if(printResponse.equalsIgnoreCase("U")) {
-					data.printTable();
+					h1.printTable();
 				}else if(printResponse.equalsIgnoreCase("R")) {
 					bst1.inOrderPrint();
 				}else {
@@ -124,14 +144,15 @@ public class YouTubeDataBase {
 			}
 			printSelection();
 			userChoice = userInput.next();
+			userInput.nextLine();
 
 		}
 		System.out.println("\nGood Bye!");  // user enter x to exit the program
 				
 		PrintWriter output = new PrintWriter(new File("output.txt"));
 		//open a file for read
-		for(int i = 0; i < data.tableSize(); i++) {
-			List<Video> videos = data.getElement(i);
+		for(int i = 0; i < h1.tableSize(); i++) {
+			List<Video> videos = h1.getElement(i);
 			videos.placeIterator();
 			// get through list get each video to print to file
 			for(int j = 0; j < videos.getLength(); j++) {
@@ -143,7 +164,7 @@ public class YouTubeDataBase {
 		
 		output.close();
 		userInput.close();
-		fileRead.close();	
+		fileRead.close();
 	}
 
 	public static void printSelection() {

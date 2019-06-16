@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class HashTable<T extends Comparable<T>> {
+public class HashTable {
 
 	private int numElements;
-	private ArrayList<List<T>> Table;
+	private ArrayList<List<Video>> Table;
+	private boolean isPrimaryKey;
 
 	/**
 	 * Constructor for the HashTable.java class. Initializes the Table to be sized
@@ -13,14 +14,15 @@ public class HashTable<T extends Comparable<T>> {
 	 * 
 	 * @param size the table size
 	 */
-	public HashTable(int size) {
+	public HashTable(int size, boolean isPrimaryKey) {
 		// The table is an arraylist of list
-		Table = new ArrayList<List<T>>(size);
+		Table = new ArrayList<List<Video>>(size);
 		while (size > 0) {
-			Table.add(new List<T>());
+			Table.add(new List<Video>());
 			size--;
 		}
 		numElements = 0;
+		this.isPrimaryKey = isPrimaryKey;
 	}
 
 	/** Accessors */
@@ -31,8 +33,13 @@ public class HashTable<T extends Comparable<T>> {
 	 * @param t the Object
 	 * @return the index in the Table
 	 */
-	private int hash(T t) {
-		int code = t.hashCode();
+	private int hash(Video t) {
+		int code;
+		if (isPrimaryKey) {
+			code = t.hashCodeByUrl();
+		} else {
+			code = t.hashCodeByVideoName();
+		}
 		return code % Table.size();
 	}
 
@@ -72,9 +79,13 @@ public class HashTable<T extends Comparable<T>> {
 	 * @return the index in the Table (0 to Table.length - 1) or -1 if t is not in
 	 *         the Table
 	 */
-	public int search(T t) {
-		int code = hash(t);
-		return Table.get(code).linearSearch(t);
+	public int search(Video t) {
+		int index = hash(t);
+    	if (Table.get(index).linearSearch(t) == -1) {
+    		return -1;
+    	} else {
+    		return index;
+    	}
 	}
 
 	/** Manipulation Procedures */
@@ -85,7 +96,7 @@ public class HashTable<T extends Comparable<T>> {
 	 * 
 	 * @param t the element to insert
 	 */
-	public void insert(T t) {
+	public void insert(Video t) {
 		numElements++;
 		// calls the hash method to determine placement
 		int index = hash(t);
@@ -100,7 +111,7 @@ public class HashTable<T extends Comparable<T>> {
 	 * @precondition t must be in the table
 	 * @throws NoSuchElementException when the element is not in the table
 	 */
-	public void remove(T t) throws NoSuchElementException {
+	public void remove(Video t) throws NoSuchElementException {
 		if (search(t) == -1) {
 			throw new NoSuchElementException("remove: Cannot remove when the element is not in the table");
 		}
@@ -108,8 +119,6 @@ public class HashTable<T extends Comparable<T>> {
 		int index = hash(t);
 		// remove the element
 		int indexInList = Table.get(index).linearSearch(t);
-		// Place the iterator
-		Table.get(index).placeIterator();
 		// Advance the iterator to the indexInList
 		Table.get(index).advanceToIndex(indexInList);
 		// Delete the element
@@ -153,13 +162,13 @@ public class HashTable<T extends Comparable<T>> {
         	if(Table.get(i).getLength() == 0) {
         		continue;
         	}else{
-        		T temp = Table.get(i).getFirst();
+        		Video temp = Table.get(i).getFirst();
         		System.out.print(temp.toString());
         	}
         }
      }
     
-    public List<T> getElement(int bucket){
+    public List<Video> getElement(int bucket){
     	return Table.get(bucket);
     } 
 	
