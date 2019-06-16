@@ -6,7 +6,8 @@ import java.io.*;
 public class YouTubeDataBase {
 	public static void main(String[] args) throws IOException {
 		HashTable<Video> data = new HashTable<Video>(75);
-		BST<Video> bst = new BST<>(); 
+		BST bst1 = new BST(true);//BST by URL
+		BST bst2 = new BST(false);//BST by video name
 
 		System.out.println("Welcome to the YouTube DataBase! ");
 		System.out.println("We are now reading data from our database ...\n");
@@ -36,7 +37,8 @@ public class YouTubeDataBase {
 
 			Video tempVideo = new Video(videoURL, videoName, publisher, year, views);
 			data.insert(tempVideo);
-			bst.insert(tempVideo);
+			bst1.insert(tempVideo);
+			bst2.insert(tempVideo);
 		}
 
 		// UI part
@@ -62,7 +64,8 @@ public class YouTubeDataBase {
 				tempviews = userInput.nextLine();
 				Video tempVideo = new Video (tempurl, tempname, temppublisher, tempyear, tempviews);
 				data.insert(tempVideo); // add to HashTable
-				bst.insert(tempVideo); // add to BST
+				bst1.insert(tempVideo); // add to BST1
+				bst2.insert(tempVideo); // add to BST1
 				System.out.println();
 				
 			} else if (userChoice.equalsIgnoreCase("D")) {
@@ -78,7 +81,8 @@ public class YouTubeDataBase {
 					System.out.println("The video you are looking for is not in the database! Exit Code: 1.");
 					System.exit(2);
 				}else {
-					bst.remove(tempVideo);
+					bst1.remove(tempVideo);
+					bst2.remove(tempVideo);
             		data.remove(tempVideo);
             		System.out.println("The video: " + tempVideo.getName() +"has been removed! ");
 				}
@@ -109,9 +113,9 @@ public class YouTubeDataBase {
 				if(printResponse.equalsIgnoreCase("U")) {
 					data.printTable();
 				}else if(printResponse.equalsIgnoreCase("R")) {
-					//Print sorted by URL
+					bst1.inOrderPrint();
 				}else {
-					//Print sorted by names
+					bst2.inOrderPrint();
 				}
 			} else {
 				// Invalid input

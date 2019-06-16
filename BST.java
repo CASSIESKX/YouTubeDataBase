@@ -1,12 +1,12 @@
 import java.util.NoSuchElementException;
 
-public class BST<T extends Comparable<T>> {
+public class BST {
     private class Node {
-        private T data;
+        private Video data;
         private Node left;
         private Node right;
         
-        public Node(T data) {
+        public Node(Video data) {
             this.data = data;
             left = null;
             right = null;
@@ -47,7 +47,7 @@ public class BST<T extends Comparable<T>> {
      * @throws NoSuchElementException when
      * preconditon is violated
      */
-    public T getRoot() throws NoSuchElementException{
+    public Video getRoot() throws NoSuchElementException{
         if (isEmpty()) {
         	throw new NoSuchElementException("getRoot(): the tree is empty! No data to acccess!");
         } else {
@@ -131,7 +131,7 @@ public class BST<T extends Comparable<T>> {
      * @throws NoSuchElementException when the
      * precondition is violated
      */
-    public T findMin() throws NoSuchElementException{
+    public Video findMin() throws NoSuchElementException{
         if (isEmpty()) {
         	throw new NoSuchElementException("findMin(): the tree is empty! No data to acccess!");
         } else {
@@ -145,7 +145,7 @@ public class BST<T extends Comparable<T>> {
      * if it is the smallest
      * @return the smallest value in the tree
      */
-    private T findMin(Node node) {
+    private Video findMin(Node node) {
         if (node.left != null) {
         	return findMin(node.left);
         } else {
@@ -160,7 +160,7 @@ public class BST<T extends Comparable<T>> {
      * @throws NoSuchElementException when the
      * precondition is violated
      */
-    public T findMax() throws NoSuchElementException{
+    public Video findMax() throws NoSuchElementException{
         if (isEmpty()) {
         	throw new NoSuchElementException("findMax(): the tree is empty! No data to acccess!");
         } else {
@@ -174,7 +174,7 @@ public class BST<T extends Comparable<T>> {
      * if it is the largest
      * @return the largest value in the tree
      */
-    private T findMax(Node node) {
+    private Video findMax(Node node) {
         if (node.right != null) {
         	return findMax(node.right);
         } else {
@@ -189,14 +189,14 @@ public class BST<T extends Comparable<T>> {
      * @return whether the value is stored
      * in the tree
      */
-    public boolean search(T data) {
+    public boolean search(Video data) {
         if (root == null) {
         	return false;
         } else {
         	if (isPrimaryKey) {
-        		return searchByPrimaryKey(data, root);
+        		return searchByUrl(data, root);
         	} else {
-        		return searchBySecondaryKey(data, root);
+        		return searchByVideoName(data, root);
         	}
         	
         }
@@ -209,20 +209,20 @@ public class BST<T extends Comparable<T>> {
      * @return whether the data is stored
      * in the tree
      */
-    private boolean searchByPrimaryKey(T data, Node node) {
-        if (data.compareToByPrimaryKey(node.data) == 0) {
+    private boolean searchByUrl(Video data, Node node) {
+        if (data.compareToByUrl(node.data) == 0) {
         	return true;
-        } else if (data.compareToByPrimaryKey(node.data) < 0) {
+        } else if (data.compareToByUrl(node.data) < 0) {
         	if (node.left == null) {
         		return false;
         	} else {
-        		return searchByPrimaryKey(data, node.left);
+        		return searchByUrl(data, node.left);
         	}
         } else {
         	if (node.right == null) {
         		return false;
         	} else {
-        		return searchByPrimaryKey(data, node.right);
+        		return searchByUrl(data, node.right);
         	}
         }
     }
@@ -234,20 +234,20 @@ public class BST<T extends Comparable<T>> {
      * @return whether the data is stored
      * in the tree
      */
-    private boolean searchBySecondaryKey(T data, Node node) {
-        if (data.compareToBySecondaryKey(node.data) == 0) {
+    private boolean searchByVideoName(Video data, Node node) {
+        if (data.compareToByVideoName(node.data) == 0) {
         	return true;
-        } else if (data.compareToBySecondaryKey(node.data) < 0) {
+        } else if (data.compareToByVideoName(node.data) < 0) {
         	if (node.left == null) {
         		return false;
         	} else {
-        		return searchBySecondaryKey(data, node.left);
+        		return searchByVideoName(data, node.left);
         	}
         } else {
         	if (node.right == null) {
         		return false;
         	} else {
-        		return searchBySecondaryKey(data, node.right);
+        		return searchByVideoName(data, node.right);
         	}
         }
     }
@@ -259,14 +259,13 @@ public class BST<T extends Comparable<T>> {
      * @param o another Object
      * @return whether the two trees are equal
      */
-    @SuppressWarnings("unchecked")
 	@Override public boolean equals(Object o) {
     	if (o == this) {	
     		return true;
     	} else if (!(o instanceof BST)) {
     		return false;
     	} else {
-    		BST<T> t = (BST<T>) o;
+    		BST t = (BST) o;
     		return equals(root, t.root);
     	}
     }
@@ -300,16 +299,16 @@ public class BST<T extends Comparable<T>> {
      * @param data the data to insert
      * @return whether inserting is successful
      */
-    public boolean insert(T data) {
+    public boolean insert(Video data) {
        if (root == null) {
     	   root = new Node(data);
        } else {
     	   if (isPrimaryKey) {
-    		   if (!insertByPrimaryKey(data, root)) {
+    		   if (!insertByUrl(data, root)) {
     			   return false;
     		   }
     	   } else {
-    		   insertBySecondaryKey(data, root);
+    		   insertByVideoName(data, root);
     	   }
        }
        return true;
@@ -324,22 +323,22 @@ public class BST<T extends Comparable<T>> {
      * search for the correct location
      * in which to insert
      */
-    private boolean insertByPrimaryKey(T data, Node node) {
-    	if (data.compareToByPrimaryKey(node.data) == 0) {
+    private boolean insertByUrl(Video data, Node node) {
+    	if (data.compareToByUrl(node.data) == 0) {
     		return false;
-    	} else if (data.compareToByPrimaryKey(node.data) < 0) {
+    	} else if (data.compareToByUrl(node.data) < 0) {
         	if (node.left == null) {
         		node.left = new Node(data);
         		return true;
         	} else {
-        		return insertByPrimaryKey(data, node.left);
+        		return insertByUrl(data, node.left);
         	}
         } else {
         	if (node.right == null) {
         		node.right = new Node(data);
         		return true;
         	} else {
-        		return insertByPrimaryKey(data, node.right);
+        		return insertByUrl(data, node.right);
         	}
         }
     }
@@ -352,18 +351,18 @@ public class BST<T extends Comparable<T>> {
      * search for the correct location
      * in which to insert
      */
-    private void insertBySecondaryKey(T data, Node node) {
-        if (data.compareToBySecondaryKey(node.data) <= 0) {
+    private void insertByVideoName(Video data, Node node) {
+        if (data.compareToByVideoName(node.data) <= 0) {
         	if (node.left == null) {
         		node.left = new Node(data);
         	} else {
-        		insertBySecondaryKey(data, node.left);
+        		insertByVideoName(data, node.left);
         	}
         } else {
         	if (node.right == null) {
         		node.right = new Node(data);
         	} else {
-        		insertBySecondaryKey(data, node.right);
+        		insertByVideoName(data, node.right);
         	}
         }
     }
@@ -376,14 +375,14 @@ public class BST<T extends Comparable<T>> {
      * @throws NoSuchElementException when the
      * precondition is violated
      */
-    public void remove(T data) throws NoSuchElementException{
+    public void remove(Video data) throws NoSuchElementException{
         if (root == null) {
         	throw new NoSuchElementException("remove(): the tree is empty! No data to acccess!");
         } else {
         	if (isPrimaryKey) {
-        		root = removeByPrimaryKey(data, root);
+        		root = removeByUrl(data, root);
         	} else {
-        		root = removeBySecondaryKey(data, root);
+        		root = removeByVideoName(data, root);
         	}
         	
         }
@@ -395,13 +394,13 @@ public class BST<T extends Comparable<T>> {
      * @param node the current node
      * @return an updated reference variable
      */
-    private Node removeByPrimaryKey(T data, Node node) {       
+    private Node removeByUrl(Video data, Node node) {       
         if (node == null) {
         	throw new NoSuchElementException("remove(): Element not found! Cannot find " + data + " in the tree.");
-        } else if (data.compareToByPrimaryKey(node.data) < 0) {
-        	node.left = removeByPrimaryKey(data, node.left);
-        } else if (data.compareToByPrimaryKey(node.data) > 0) {
-        	node.right = removeByPrimaryKey(data, node.right);
+        } else if (data.compareToByUrl(node.data) < 0) {
+        	node.left = removeByUrl(data, node.left);
+        } else if (data.compareToByUrl(node.data) > 0) {
+        	node.right = removeByUrl(data, node.right);
         } else {
         	if (node.left == null && node.right == null) {
         		return null;
@@ -410,9 +409,9 @@ public class BST<T extends Comparable<T>> {
         	} else if (node.left == null && node.right != null) {
         		return node.right;
         	} else {
-        		T minData = findMin(node.right);
+        		Video minData = findMin(node.right);
         		node.data = minData;
-        		node.right = removeByPrimaryKey(minData, node.right);
+        		node.right = removeByUrl(minData, node.right);
         	}
         }
         
@@ -425,13 +424,13 @@ public class BST<T extends Comparable<T>> {
      * @param node the current node
      * @return an updated reference variable
      */
-    private Node removeBySecondaryKey(T data, Node node) {       
+    private Node removeByVideoName(Video data, Node node) {       
         if (node == null) {
         	throw new NoSuchElementException("remove(): Element not found! Cannot find " + data + " in the tree.");
-        } else if (data.compareToBySecondary(node.data) < 0) {
-        	node.left = removeBySecondaryKey(data, node.left);
-        } else if (data.compareToBySecondary(node.data) > 0) {
-        	node.right = removeBySecondaryKey(data, node.right);
+        } else if (data.compareToByVideoName(node.data) < 0) {
+        	node.left = removeByVideoName(data, node.left);
+        } else if (data.compareToByVideoName(node.data) > 0) {
+        	node.right = removeByVideoName(data, node.right);
         } else {
         	if (node.left == null && node.right == null) {
         		return null;
@@ -440,9 +439,9 @@ public class BST<T extends Comparable<T>> {
         	} else if (node.left == null && node.right != null) {
         		return node.right;
         	} else {
-        		T minData = findMin(node.right);
+        		Video minData = findMin(node.right);
         		node.data = minData;
-        		node.right = removeBySecondaryKey(minData, node.right);
+        		node.right = removeByVideoName(minData, node.right);
         	}
         }
         

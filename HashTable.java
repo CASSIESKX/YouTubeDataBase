@@ -16,7 +16,6 @@ public class HashTable<T extends Comparable<T>> {
 	public HashTable(int size) {
 		// The table is an arraylist of list
 		Table = new ArrayList<List<T>>(size);
-		int count = size;
 		while (size > 0) {
 			Table.add(new List<T>());
 			size--;

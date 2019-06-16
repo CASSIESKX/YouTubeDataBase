@@ -118,4 +118,12 @@ public class Video  implements Comparable<Video>{
 		}
 		return sum;
 	}
+	
+	public int compareToByUrl(Video o) {
+		return url.compareTo(o.url);
+	}
+	
+	public int compareToByVideoName(Video o) {
+		return name.compareTo(o.name);
+	}
 }
