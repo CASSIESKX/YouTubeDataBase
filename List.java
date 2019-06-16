@@ -37,7 +37,7 @@ public class List<T extends Comparable<T>>  {
      * @postcondition a new List object, which is an identical
      * but separate copy of the List original
      */
-    public List(List<T> original) {
+    /*public List(List<T> original) {
         if (original == null) {
             return;
         }
@@ -54,7 +54,7 @@ public class List<T extends Comparable<T>>  {
             }
             iterator = null;
         }
-    }
+    }*/
     
     /****ACCESSORS****/
 
