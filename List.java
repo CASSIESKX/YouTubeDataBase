@@ -1,12 +1,13 @@
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class List<T extends Comparable<T>>  {
+public class List  {
     private class Node {
-        private T data;
+        private Video data;
         private Node next;
         private Node prev;
         
-        public Node(T data) {
+        public Node(Video data) {
             this.data = data;
             this.next = null;
             this.prev = null;
@@ -17,6 +18,7 @@ public class List<T extends Comparable<T>>  {
     private Node first;
     private Node last;
     private Node iterator;
+    private boolean isPrimaryKey;
     
     /****CONSTRUCTOR****/
     
@@ -29,6 +31,16 @@ public class List<T extends Comparable<T>>  {
     	last = null;
     	length = 0;
     	iterator = null;
+    	isPrimaryKey = true;
+    }
+    
+    /*** 1 parameter constructor ***/
+    public List(boolean isPrimaryKey) {
+    	first = null;
+    	last = null;
+    	length = 0;
+    	iterator = null;
+    	this.isPrimaryKey = isPrimaryKey;
     }
     
     /**
@@ -64,14 +76,14 @@ public class List<T extends Comparable<T>>  {
      * @return the data stored at node first
      * @throws NoSuchElementException when precondition is violated
      */
-    public T getFirst() throws NoSuchElementException{
+    public Video getFirst() throws NoSuchElementException{
         if (length == 0) {
         	throw new NoSuchElementException("getFirst: List is Empty. No data to access!");
         }
         return first.data;
     }
     
-    public T getIterator() throws NullPointerException {
+    public Video getIterator() throws NullPointerException {
     	if (offEnd()) {
     		throw new NullPointerException("getIterator: "
     				+ "The iterator is off the end of the List. No data to access!");
@@ -116,18 +128,24 @@ public class List<T extends Comparable<T>>  {
      * @postcondition: position of the iterator remains
      * unchanged!
      */
-    public int linearSearch(T element) {
-        if(isEmpty()) return -1;
+    public ArrayList<Video> linearSearch(Video element) {
+        ArrayList<Video> ret = new ArrayList<Video>();
+    	if(isEmpty()) return ret;
         Node temp = first;
-        int loc = 1;
         while(temp != null) {
-        	if(temp.data.equals(element)) {
-        		return loc;
+        	if (isPrimaryKey) {
+            	if(temp.data.getUrl().equals(element.getUrl())) {
+            		ret.add(temp.data);
+            		return ret;
+            	}
+        	} else {
+            	if(temp.data.getName().equals(element.getName())) {
+            		ret.add(temp.data);
+            	}
         	}
         	temp =temp.next;
-        	loc++;
         }
-        return -1; 
+        return ret; 
     }
     
     /****MUTATORS****/
@@ -138,7 +156,7 @@ public class List<T extends Comparable<T>>  {
      * end of the list
      * @postcondition A new last element will be created
      */
-    public void addLast(T data) {
+    public void addLast(Video data) {
     	if (first == null) {
             first = last = new Node(data);
         } else {
@@ -260,7 +278,7 @@ public class List<T extends Comparable<T>>  {
      * throws NullPointerException when precondition
      * is violated
      */
-    public void addIterator(T data) throws NullPointerException {
+    public void addIterator(Video data) throws NullPointerException {
     	if (offEnd()) {
     		throw new NullPointerException("addIterator(): "
     				+ "Iterator is off end. Cannot be added!");

@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 public class HashTable {
 
 	private int numElements;
-	private ArrayList<List<Video>> Table;
+	private ArrayList<List> Table;
 	private boolean isPrimaryKey;
 
 	/**
@@ -16,9 +16,9 @@ public class HashTable {
 	 */
 	public HashTable(int size, boolean isPrimaryKey) {
 		// The table is an arraylist of list
-		Table = new ArrayList<List<Video>>(size);
+		Table = new ArrayList<List>(size);
 		while (size > 0) {
-			Table.add(new List<Video>());
+			Table.add(new List(isPrimaryKey));
 			size--;
 		}
 		numElements = 0;
@@ -76,16 +76,12 @@ public class HashTable {
 	 * searches for a specified element in the Table
 	 * 
 	 * @param t the element to search for
-	 * @return the index in the Table (0 to Table.length - 1) or -1 if t is not in
+	 * @return 
 	 *         the Table
 	 */
-	public int search(Video t) {
+	public ArrayList<Video> search(Video t) {
 		int index = hash(t);
-    	if (Table.get(index).linearSearch(t) == -1) {
-    		return -1;
-    	} else {
-    		return index;
-    	}
+    	return Table.get(index).linearSearch(t);
 	}
 
 	/** Manipulation Procedures */
@@ -112,17 +108,17 @@ public class HashTable {
 	 * @throws NoSuchElementException when the element is not in the table
 	 */
 	public void remove(Video t) throws NoSuchElementException {
-		if (search(t) == -1) {
+		if (search(t).size() == 0) {
 			throw new NoSuchElementException("remove: Cannot remove when the element is not in the table");
 		}
 		// calls the hash method on the key to get the placement
 		int index = hash(t);
-		// remove the element
-		int indexInList = Table.get(index).linearSearch(t);
-		// Advance the iterator to the indexInList
-		Table.get(index).advanceToIndex(indexInList);
-		// Delete the element
-		Table.get(index).removeIterator();
+    	List L = Table.get(index);
+    	L.placeIterator();
+    	while(L.getIterator().compareTo(t) != 0) {
+    		L.advanceIterator();
+    	}
+    	L.removeIterator();
 		// Decrement the size
 		numElements--;
 	}
@@ -162,13 +158,17 @@ public class HashTable {
         	if(Table.get(i).getLength() == 0) {
         		continue;
         	}else{
-        		Video temp = Table.get(i).getFirst();
-        		System.out.print(temp.toString());
+        		List l = Table.get(i);
+        		l.placeIterator();
+        		for (int j = 0; j < l.getLength(); j++) {
+        			System.out.print(l.getIterator());
+        			l.advanceIterator();
+        		}
         	}
         }
      }
     
-    public List<Video> getElement(int bucket){
+    public List getElement(int bucket){
     	return Table.get(bucket);
     } 
 	
