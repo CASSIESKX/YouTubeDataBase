@@ -24,7 +24,7 @@ public class YouTubeDataBase {
 		BST bst2 = new BST(false);//BST by video name
 
 		System.out.println("Welcome to the YouTube DataBase! ");
-		System.out.println("We are now reading data from our database ...\n");
+		System.out.println("We are now reading data from our database...\n");
 		String inputFile = "data.txt";
 
 		File file = new File(inputFile);
@@ -67,10 +67,11 @@ public class YouTubeDataBase {
 			if (userChoice.equalsIgnoreCase("A")) {
 				System.out.println("\nNow adding a video");
 				while (true) {
+					System.out.println("\nNote: The input URL doesn't have youtube host and path. They are added automatically.");
+					System.out.println("So only add the LAST part of the URL.\n");
 					System.out.print("Enter the URL of the video: ");
 					tempurl = userInput.nextLine();
 					if (!tempurl.startsWith("https://www.youtube.com/watch?v=")) {
-						System.out.println("The input url doesn't have youtube host and path. They are added automatically");
 						tempurl = "https://www.youtube.com/watch?v=" + tempurl;
 						System.out.println("The url stored in database is: " + tempurl);
 					}
@@ -108,10 +109,11 @@ public class YouTubeDataBase {
 				
 			} else if (userChoice.equalsIgnoreCase("D")) {
 				System.out.println("\nNow deleting a video ... ");
+				System.out.println("\nNote: The input URL doesn't have youtube host and path. They are added automatically.");
+				System.out.println("So only add the LAST part of the URL.\n");
 				System.out.print("Enter the URL of the video: ");
 				tempurl = userInput.nextLine();
 				if (!tempurl.startsWith("https://www.youtube.com/watch?v=")) {
-					System.out.println("The input url doesn't have youtube host and path. They are added automatically");
 					tempurl = "https://www.youtube.com/watch?v=" + tempurl;
 					System.out.println("The url to remove in database is: " + tempurl);
 				}
@@ -136,10 +138,11 @@ public class YouTubeDataBase {
 				String searchResponse = userInput.nextLine();
 				if (searchResponse.equalsIgnoreCase("u")) {
 					System.out.println("Now searching based on URL! ");
-					System.out.print("Enter the URL please :");
+					System.out.println("\nNote: The input URL doesn't have youtube host and path. They are added automatically.");
+					System.out.println("So only add the LAST part of the URL.\n");
+					System.out.print("Enter the URL please: ");
 					String urlFromUser = userInput.nextLine();
 					if (!urlFromUser.startsWith("https://www.youtube.com/watch?v=")) {
-						System.out.println("The input url doesn't have youtube host and path. They are added automatically");
 						urlFromUser = "https://www.youtube.com/watch?v=" + urlFromUser;
 						System.out.println("The url to search in database is: " + urlFromUser);
 					}
@@ -193,7 +196,7 @@ public class YouTubeDataBase {
 					// get through list get each video to print to file
 					for(int j = 0; j < videos.getLength(); j++) {
 						//write to a file
-						output.println(videos.getIterator());
+						output.print(videos.getIterator().toOutput());
 						videos.advanceIterator();
 					}
 				}
@@ -221,7 +224,7 @@ public class YouTubeDataBase {
 			// get through list get each video to print to file
 			for(int j = 0; j < videos.getLength(); j++) {
 				//write to a file
-				output.println(videos.getIterator());
+				output.print(videos.getIterator().toOutput());
 				videos.advanceIterator();
 			}
 		}
