@@ -126,15 +126,17 @@ public class YouTubeDataBase {
             		h.remove(v);
             		System.out.println("The video: <" + v.getName() +"> has been removed!");
 				}
+				System.out.println();
 			} else if (userChoice.equalsIgnoreCase("S")) {
 				//Sub menu here
 				System.out.println("Would you like to search using URL or video name?");
 				System.out.println("Enter U for URL, otherwise, the program will search by name! ");
+				System.out.print(">>>>");
 				Video tempVideo = new Video();
 				String searchResponse = userInput.nextLine();
-				if(searchResponse.equalsIgnoreCase("u")) {
+				if (searchResponse.equalsIgnoreCase("u")) {
 					System.out.println("Now searching based on URL! ");
-					System.out.println("Enter the URL please :");
+					System.out.print("Enter the URL please :");
 					String urlFromUser = userInput.nextLine();
 					if (!urlFromUser.startsWith("https://www.youtube.com/watch?v=")) {
 						System.out.println("The input url doesn't have youtube host and path. They are added automatically");
@@ -149,9 +151,9 @@ public class YouTubeDataBase {
 						System.out.println("Found video with url <" + urlFromUser + "> below:");
 						System.out.println(v);
 					}
-				}else {
+				} else {
 					System.out.println("Now searching based on video names! ");
-					System.out.println("Enter the video name please :");
+					System.out.print("Enter the video name please :");
 					String nameFromUser = userInput.nextLine();
 					tempVideo.setName(nameFromUser);
 					ArrayList<Video> al = bst2.searchByVideoName(tempVideo);
@@ -171,6 +173,7 @@ public class YouTubeDataBase {
 				System.out.println("Enter 'U' to print unsorted data, ");
 				System.out.println("'R' to print the data sorted by URL,");
 				System.out.println("otherwise, the program will print data sorted by video names.");
+				System.out.print(">>>>");
 				String printResponse = userInput.nextLine();
 				if(printResponse.equalsIgnoreCase("U")) {
 					h.printTable();
@@ -179,6 +182,7 @@ public class YouTubeDataBase {
 				}else {
 					bst2.inOrderPrint();
 				}
+				System.out.println();
 			} else if (userChoice.equalsIgnoreCase("W")){
 				System.out.println("Now writing data into output.text....");
 				PrintWriter output = new PrintWriter(new File("output.txt"));
@@ -195,9 +199,11 @@ public class YouTubeDataBase {
 				}
 				output.close();
 				System.out.println("Writing done!");
+				System.out.println();
 			} else {
 				// Invalid input
 				System.out.println("\nInvalid Input!");
+				System.out.println();
 
 			}
 			printSelection();
@@ -230,7 +236,7 @@ public class YouTubeDataBase {
 		System.out.println("D. Ehhh, I want to delete a video.");
 		System.out.println("S. I wanna search something ...");
 		System.out.println("L. List everything for me!");
-		System.out.println("W. write everything into a file!");
+		System.out.println("W. Write everything into a file!");
 		System.out.println("X. Exit");
 		System.out.print("\nPlease select your choice: ");
 	}
