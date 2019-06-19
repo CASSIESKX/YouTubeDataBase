@@ -81,7 +81,7 @@ public class Video  implements Comparable<Video>{
     		return false;
     	} else {
     		Video v = (Video) o;
-    		return url.equals(v.url) && name.equals(v.name) && publisher.equals(publisher) && year.equals(year) && views.equals(views);
+    		return url.equals(v.url);
     	}
     }
     
@@ -102,7 +102,7 @@ public class Video  implements Comparable<Video>{
     	}
     }
 	
-	public int hashCodeByUrl() {
+	public int hashCode() {
 		String urlSubString = url.substring(url.indexOf("=")+1, url.length());
         int sum = 0;
         for (int i = 0; i < urlSubString.length(); i++) {
@@ -110,14 +110,6 @@ public class Video  implements Comparable<Video>{
         }
         return sum;
     }
-	
-	public int hashCodeByVideoName() {
-		int sum = 0;
-		for(int i = 0; i< name.length(); i++) {
-			sum += (int)name.charAt(i);
-		}
-		return sum;
-	}
 	
 	public int compareToByUrl(Video o) {
 		return url.compareTo(o.url);

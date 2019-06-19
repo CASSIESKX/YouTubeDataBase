@@ -5,9 +5,21 @@ import java.util.Scanner;
 import java.io.*;
 
 public class YouTubeDataBase {
+
+	private static boolean isInteger(String s) {
+	    return isInteger(s,10);
+	}
+
+	private static boolean isInteger(String s, int radix) {
+	    if(s.isEmpty()) return false;
+	    for(int i = 0; i < s.length(); i++) {
+	        if(Character.digit(s.charAt(i),radix) < 0) return false;
+	    }
+	    return true;
+	}
+	
 	public static void main(String[] args) throws IOException {
-		HashTable h1 = new HashTable(75, true);//HashTable by URL
-		HashTable h2 = new HashTable(75, false);//HashTable by video name
+		HashTable<Video> h = new HashTable<Video>(75);//HashTable by URL
 		BST bst1 = new BST(true);//BST by URL
 		BST bst2 = new BST(false);//BST by video name
 
@@ -38,8 +50,7 @@ public class YouTubeDataBase {
 			views = fileRead.nextLine();
 
 			Video tempVideo = new Video(videoURL, videoName, publisher, year, views);
-			h1.insert(tempVideo);
-			h2.insert(tempVideo);
+			h.insert(tempVideo);
 			bst1.insert(tempVideo);
 			bst2.insert(tempVideo);
 		}
@@ -55,21 +66,39 @@ public class YouTubeDataBase {
 			
 			if (userChoice.equalsIgnoreCase("A")) {
 				System.out.println("\nNow adding a video");
-				System.out.print("Enter the URL of the video: ");
-				tempurl = userInput.nextLine();
-				System.out.print("Enter the name of the video: ");
-				tempname = userInput.nextLine();
-				System.out.print("Enter the publisher of the video: ");
-				temppublisher = userInput.nextLine();
-				System.out.print("Enter the year of the video: ");
-				tempyear = userInput.nextLine();
-				System.out.print("Enter the views of the video: ");
-				tempviews = userInput.nextLine();
+				while (true) {
+					System.out.print("Enter the URL of the video: ");
+					tempurl = userInput.nextLine();
+					if (!tempurl.startsWith("https://www.youtube.com/watch?v=")) {
+						System.out.println("The input url doesn't have youtube host and path. They are added automatically");
+						tempurl = "https://www.youtube.com/watch?v=" + tempurl;
+						System.out.println("The url stored in database is: " + tempurl);
+					}
+					System.out.print("Enter the name of the video: ");
+					tempname = userInput.nextLine();
+					System.out.print("Enter the publisher of the video: ");
+					temppublisher = userInput.nextLine();
+					System.out.print("Enter the year of the video: ");
+					tempyear = userInput.nextLine();
+					if (!isInteger(tempyear)) {
+						System.out.println("\"Year\" needs to be a non-negative integer");
+						System.out.println("Please provide info again:");
+						continue;
+					}
+					System.out.print("Enter the views of the video: ");
+					tempviews = userInput.nextLine();
+					if (!isInteger(tempviews)) {
+						System.out.println("\"Views\" needs to be a non-negative integer");
+						System.out.println("Please provide info again:");
+						continue;
+					} else {
+						break;
+					}
+				}
 				Video tempVideo = new Video (tempurl, tempname, temppublisher, tempyear, tempviews);
 				//Make sure primary key is unique
 				if (bst1.insert(tempVideo)) {
-					h1.insert(tempVideo); // add to HashTable h1
-					h2.insert(tempVideo); // add to hashTable h2
+					h.insert(tempVideo); // add to HashTable h1
 					bst2.insert(tempVideo); // add to BST1
 					System.out.println("Added successfully!");
 				} else {
@@ -81,23 +110,21 @@ public class YouTubeDataBase {
 				System.out.println("\nNow deleting a video ... ");
 				System.out.print("Enter the URL of the video: ");
 				tempurl = userInput.nextLine();
-				//System.out.print("Enter the name of the video: ");
-				//tempname = userInput.nextLine();
+				if (!tempurl.startsWith("https://www.youtube.com/watch?v=")) {
+					System.out.println("The input url doesn't have youtube host and path. They are added automatically");
+					tempurl = "https://www.youtube.com/watch?v=" + tempurl;
+					System.out.println("The url to remove in database is: " + tempurl);
+				}
 				Video tempVideo = new Video (tempurl, "unknown name");
-				
 				//should call remove method to remove data
-				ArrayList<Video> al = h1.search(tempVideo);
-				if(al.size() == 0) {
+				Video v = h.search(tempVideo);
+				if(v == null) {
 					System.out.println("The video you are looking for is not in the database!");
-					//Why exit?
-					//System.out.println("The video you are looking for is not in the database! Exit Code: 1.");
-					//System.exit(2);
 				} else {
-					bst1.remove(al.get(0));
-					bst2.remove(al.get(0));
-            		h1.remove(al.get(0));
-            		h2.remove(al.get(0));
-            		System.out.println("The video: <" + al.get(0).getName() +"> has been removed! ");
+					bst1.remove(v);
+					bst2.remove(v);
+            		h.remove(v);
+            		System.out.println("The video: <" + v.getName() +"> has been removed!");
 				}
 			} else if (userChoice.equalsIgnoreCase("S")) {
 				//Sub menu here
@@ -109,20 +136,25 @@ public class YouTubeDataBase {
 					System.out.println("Now searching based on URL! ");
 					System.out.println("Enter the URL please :");
 					String urlFromUser = userInput.nextLine();
+					if (!urlFromUser.startsWith("https://www.youtube.com/watch?v=")) {
+						System.out.println("The input url doesn't have youtube host and path. They are added automatically");
+						urlFromUser = "https://www.youtube.com/watch?v=" + urlFromUser;
+						System.out.println("The url to search in database is: " + urlFromUser);
+					}
 					tempVideo.setUrl(urlFromUser);
-					ArrayList<Video> al = h1.search(tempVideo);
-					if (al.size() == 0) {
+					Video v = h.search(tempVideo);
+					if (v == null) {
 						System.out.println("Cannot find video with url <" + urlFromUser +">");
 					} else {
 						System.out.println("Found video with url <" + urlFromUser + "> below:");
-						System.out.println(al.get(0));
+						System.out.println(v);
 					}
 				}else {
 					System.out.println("Now searching based on video names! ");
 					System.out.println("Enter the video name please :");
 					String nameFromUser = userInput.nextLine();
 					tempVideo.setName(nameFromUser);
-					ArrayList<Video> al = h2.search(tempVideo);
+					ArrayList<Video> al = bst2.searchByVideoName(tempVideo);
 					if (al.size() == 0) {
 						System.out.println("Cannot find video with name <" + nameFromUser + ">");
 					} else {
@@ -141,18 +173,18 @@ public class YouTubeDataBase {
 				System.out.println("otherwise, the program will print data sorted by video names.");
 				String printResponse = userInput.nextLine();
 				if(printResponse.equalsIgnoreCase("U")) {
-					h1.printTable();
+					h.printTable();
 				}else if(printResponse.equalsIgnoreCase("R")) {
 					bst1.inOrderPrint();
 				}else {
 					bst2.inOrderPrint();
 				}
 			} else if (userChoice.equalsIgnoreCase("W")){
-				System.out.println("Now writing data into dataout.text");
-				PrintWriter output = new PrintWriter(new File("dataout.txt"));
+				System.out.println("Now writing data into output.text....");
+				PrintWriter output = new PrintWriter(new File("output.txt"));
 				//open a file for read
-				for(int i = 0; i < h1.tableSize(); i++) {
-					List videos = h1.getElement(i);
+				for(int i = 0; i < h.tableSize(); i++) {
+					List<Video> videos = h.getElement(i);
 					videos.placeIterator();
 					// get through list get each video to print to file
 					for(int j = 0; j < videos.getLength(); j++) {
@@ -162,6 +194,7 @@ public class YouTubeDataBase {
 					}
 				}
 				output.close();
+				System.out.println("Writing done!");
 			} else {
 				// Invalid input
 				System.out.println("\nInvalid Input!");
@@ -174,10 +207,10 @@ public class YouTubeDataBase {
 		}
 		System.out.println("\nGood Bye!");  // user enter x to exit the program
 				
-		PrintWriter output = new PrintWriter(new File("output.txt"));
+		PrintWriter output = new PrintWriter(new File("autosaved.txt"));
 		//open a file for read
-		for(int i = 0; i < h1.tableSize(); i++) {
-			List videos = h1.getElement(i);
+		for(int i = 0; i < h.tableSize(); i++) {
+			List<Video> videos = h.getElement(i);
 			videos.placeIterator();
 			// get through list get each video to print to file
 			for(int j = 0; j < videos.getLength(); j++) {

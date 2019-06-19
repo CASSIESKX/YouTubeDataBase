@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class HashTable {
+public class HashTable<T extends Comparable<T>> {
 
 	private int numElements;
-	private ArrayList<List> Table;
-	private boolean isPrimaryKey;
+	private ArrayList<List<T>> Table;
+	//private boolean isPrimaryKey;
 
 	/**
 	 * Constructor for the HashTable.java class. Initializes the Table to be sized
@@ -14,15 +14,14 @@ public class HashTable {
 	 * 
 	 * @param size the table size
 	 */
-	public HashTable(int size, boolean isPrimaryKey) {
+	public HashTable(int size) {
 		// The table is an arraylist of list
-		Table = new ArrayList<List>(size);
+		Table = new ArrayList<List<T>>(size);
 		while (size > 0) {
-			Table.add(new List(isPrimaryKey));
+			Table.add(new List<T>());
 			size--;
 		}
 		numElements = 0;
-		this.isPrimaryKey = isPrimaryKey;
 	}
 
 	/** Accessors */
@@ -33,13 +32,8 @@ public class HashTable {
 	 * @param t the Object
 	 * @return the index in the Table
 	 */
-	private int hash(Video t) {
-		int code;
-		if (isPrimaryKey) {
-			code = t.hashCodeByUrl();
-		} else {
-			code = t.hashCodeByVideoName();
-		}
+	private int hash(T t) {
+		int code = t.hashCode();
 		return code % Table.size();
 	}
 
@@ -79,7 +73,7 @@ public class HashTable {
 	 * @return 
 	 *         the Table
 	 */
-	public ArrayList<Video> search(Video t) {
+	public T search(T t) {
 		int index = hash(t);
     	return Table.get(index).linearSearch(t);
 	}
@@ -92,7 +86,7 @@ public class HashTable {
 	 * 
 	 * @param t the element to insert
 	 */
-	public void insert(Video t) {
+	public void insert(T t) {
 		numElements++;
 		// calls the hash method to determine placement
 		int index = hash(t);
@@ -107,13 +101,13 @@ public class HashTable {
 	 * @precondition t must be in the table
 	 * @throws NoSuchElementException when the element is not in the table
 	 */
-	public void remove(Video t) throws NoSuchElementException {
-		if (search(t).size() == 0) {
+	public void remove(T t) throws NoSuchElementException {
+		if (search(t) == null) {
 			throw new NoSuchElementException("remove: Cannot remove when the element is not in the table");
 		}
 		// calls the hash method on the key to get the placement
 		int index = hash(t);
-    	List L = Table.get(index);
+    	List<T> L = Table.get(index);
     	L.placeIterator();
     	while(L.getIterator().compareTo(t) != 0) {
     		L.advanceIterator();
@@ -158,7 +152,7 @@ public class HashTable {
         	if(Table.get(i).getLength() == 0) {
         		continue;
         	}else{
-        		List l = Table.get(i);
+        		List<T> l = Table.get(i);
         		l.placeIterator();
         		for (int j = 0; j < l.getLength(); j++) {
         			System.out.print(l.getIterator());
@@ -168,7 +162,7 @@ public class HashTable {
         }
      }
     
-    public List getElement(int bucket){
+    public List<T> getElement(int bucket){
     	return Table.get(bucket);
     } 
 	

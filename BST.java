@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 public class BST {
@@ -47,21 +48,13 @@ public class BST {
      * @throws NoSuchElementException when
      * preconditon is violated
      */
-    /*public Video getRoot() throws NoSuchElementException{
+    public Video getRoot() throws NoSuchElementException{
         if (isEmpty()) {
         	throw new NoSuchElementException("getRoot(): the tree is empty! No data to acccess!");
         } else {
         	return root.data;
         }
-    }*/
-    
-    /**
-     * returns whether the BST uses primary key
-     * @return whether the BST uses primary key
-     */
-    /*public boolean getIsPrimaryKey() {
-    	return isPrimaryKey;
-    }*/
+    }
     
     /**
      * Determines whether the tree is empty
@@ -70,59 +63,6 @@ public class BST {
     public boolean isEmpty() {
         return (root == null);
     }
-    
-    /**
-     * Returns the current size of the 
-     * tree (number of nodes)
-     * @return the size of the tree
-     */
-    /*public int getSize() {
-        return getSize(root);
-    }*/
-    
-    /**
-     * Helper method for the getSize method
-     * @param node the current node to count
-     * @return the size of the tree
-     */
-    /*private int getSize(Node node) {
-        if (node == null) {
-        	return 0;
-        } else {
-        	int size = getSize(node.left);
-        	size += getSize(node.right);
-        	return size + 1;
-        }
-    }*/
-    
-    /**
-     * Returns the height of tree by
-     * counting edges.
-     * @return the height of the tree
-     */
-    /*public int getHeight() {
-        return getHeight(root);
-    }*/
-    
-    /**
-     * Helper method for getHeight method
-     * @param node the current
-     * node whose height to count
-     * @return the height of the tree
-     */
-    /*private int getHeight(Node node) {
-        if (node == null) {
-        	return -1;
-        } else {
-        	int heightLeft = getHeight(node.left);
-        	int heightRight = getHeight(node.right);
-        	if (heightLeft >= heightRight) {
-        		return heightLeft + 1;
-        	} else {
-        		return heightRight + 1;
-        	}
-        }
-    }*/
     
     /**
      * Returns the smallest value in the tree
@@ -152,35 +92,6 @@ public class BST {
         	return node.data;
         }
     }
-    
-    /**
-     * Returns the largest value in the tree
-     * @precondition !isEmpty()
-     * @return the largest value in the tree
-     * @throws NoSuchElementException when the
-     * precondition is violated
-     */
-    /*public Video findMax() throws NoSuchElementException{
-        if (isEmpty()) {
-        	throw new NoSuchElementException("findMax(): the tree is empty! No data to acccess!");
-        } else {
-        	return findMax(root);
-        }
-    }*/
-    
-    /**
-     * Helper method to findMax method
-     * @param node the current node to check
-     * if it is the largest
-     * @return the largest value in the tree
-     */
-    /*private Video findMax(Node node) {
-        if (node.right != null) {
-        	return findMax(node.right);
-        } else {
-        	return node.data;
-        }
-    }*/
     
     /**
      * Searches for a specified value
@@ -253,44 +164,32 @@ public class BST {
     }
     
     /**
-     * Determines whether two trees store
-     * identical data in the same structural
-     * position in the tree
-     * @param o another Object
-     * @return whether the two trees are equal
+     * Search for all the video with input video name
+     * @param data the value to search for
+     * @return an arraylist contains all the video element with required name
      */
-	/*@Override public boolean equals(Object o) {
-    	if (o == this) {	
-    		return true;
-    	} else if (!(o instanceof BST)) {
-    		return false;
-    	} else {
-    		BST t = (BST) o;
-    		return equals(root, t.root);
-    	}
-    }*/
+    public ArrayList<Video> searchByVideoName(Video data) {
+    	ArrayList<Video> ret = new ArrayList<Video>();
+    	searchByVideoName(root, ret, data);
+    	return ret;
+    }
     
     /**
-     * Helper method for the equals method
-     * @param node1 the node of the first bst
-     * @param node2 the node of the second bst
-     * @return whether the two trees contain
-     * identical data stored in the same structural
-     * position inside the trees
-     */    
-    /*private boolean equals(Node node1, Node node2) {
-        if (node1 != null && node2 != null) {
-        	if (node1.data == node2.data) {
-        		return equals(node1.left, node2.left) && equals(node1.right, node2.right);
-        	} else {
-        		return false;
-        	}
-        } else if (node1 == null && node2 == null) {
-        	return true;
-        } else {
-        	return false;
-        }
-    }*/
+     * Helper method for Search for all the video with input video name
+     * @param node the current node to check
+     * @param al the arraylist contains videos with matched name
+     * @param data the value to search for
+     */
+    private void searchByVideoName(Node node, ArrayList<Video> al, Video data) {
+    	if (node == null) {
+    		return;
+    	}
+    	searchByVideoName(node.left, al, data);
+    	searchByVideoName(node.right, al, data);
+    	if (data.getName().equals(node.data.getName())) {
+    		al.add(node.data);
+    	}
+    }
     
     /***MUTATORS***/
     

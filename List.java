@@ -1,13 +1,12 @@
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class List  {
+public class List<T extends Comparable<T>>  {
     private class Node {
-        private Video data;
+        private T data;
         private Node next;
         private Node prev;
         
-        public Node(Video data) {
+        public Node(T data) {
             this.data = data;
             this.next = null;
             this.prev = null;
@@ -18,7 +17,6 @@ public class List  {
     private Node first;
     private Node last;
     private Node iterator;
-    private boolean isPrimaryKey;
     
     /****CONSTRUCTOR****/
     
@@ -31,42 +29,7 @@ public class List  {
     	last = null;
     	length = 0;
     	iterator = null;
-    	isPrimaryKey = true;
     }
-    
-    /*** 1 parameter constructor ***/
-    public List(boolean isPrimaryKey) {
-    	first = null;
-    	last = null;
-    	length = 0;
-    	iterator = null;
-    	this.isPrimaryKey = isPrimaryKey;
-    }
-    
-    /**
-     * Instantiates a new List by copying another List
-     * @param original the List to make a copy of
-     * @postcondition a new List object, which is an identical
-     * but separate copy of the List original
-     */
-    /*public List(List<T> original) {
-        if (original == null) {
-            return;
-        }
-        if (original.length == 0) {
-            length = 0;
-            first = null;
-            last = null;
-            iterator = null;
-        } else {
-            Node temp = original.first;
-            while (temp != null) {
-                addLast(temp.data);
-                temp = temp.next;
-            }
-            iterator = null;
-        }
-    }*/
     
     /****ACCESSORS****/
 
@@ -76,14 +39,14 @@ public class List  {
      * @return the data stored at node first
      * @throws NoSuchElementException when precondition is violated
      */
-    public Video getFirst() throws NoSuchElementException{
+    public T getFirst() throws NoSuchElementException{
         if (length == 0) {
         	throw new NoSuchElementException("getFirst: List is Empty. No data to access!");
         }
         return first.data;
     }
     
-    public Video getIterator() throws NullPointerException {
+    public T getIterator() throws NullPointerException {
     	if (offEnd()) {
     		throw new NullPointerException("getIterator: "
     				+ "The iterator is off the end of the List. No data to access!");
@@ -128,22 +91,15 @@ public class List  {
      * @postcondition: position of the iterator remains
      * unchanged!
      */
-    public ArrayList<Video> linearSearch(Video element) {
-        ArrayList<Video> ret = new ArrayList<Video>();
+    public T linearSearch(T element) {
+    	T ret = null;
     	if(isEmpty()) return ret;
         Node temp = first;
         while(temp != null) {
-        	if (isPrimaryKey) {
-            	if(temp.data.getUrl().equals(element.getUrl())) {
-            		ret.add(temp.data);
-            		return ret;
-            	}
-        	} else {
-            	if(temp.data.getName().equals(element.getName())) {
-            		ret.add(temp.data);
-            	}
-        	}
-        	temp =temp.next;
+            if(temp.data.equals(element)) {
+            	return temp.data;
+            }
+        	temp = temp.next;
         }
         return ret; 
     }
@@ -156,7 +112,7 @@ public class List  {
      * end of the list
      * @postcondition A new last element will be created
      */
-    public void addLast(Video data) {
+    public void addLast(T data) {
     	if (first == null) {
             first = last = new Node(data);
         } else {
@@ -278,7 +234,7 @@ public class List  {
      * throws NullPointerException when precondition
      * is violated
      */
-    public void addIterator(Video data) throws NullPointerException {
+    public void addIterator(T data) throws NullPointerException {
     	if (offEnd()) {
     		throw new NullPointerException("addIterator(): "
     				+ "Iterator is off end. Cannot be added!");
