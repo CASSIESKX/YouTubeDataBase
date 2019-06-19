@@ -71,7 +71,15 @@ public class Video  implements Comparable<Video>{
         		"Video Title: " + name + "\n" + 
         		"Publisher: " + publisher + "\n" + 
         		"Year: " + year + "\n" +
-        		"Views: " + views + "\n"; 
+        		"Views: " + views + "\n\n"; 
+    }
+    
+    public String toOutput() {
+        return url + "\n" + 
+        		name + "\n" + 
+        		publisher + "\n" + 
+        		year + "\n" +
+        		views + "\n"; 
     }
 
     @Override public boolean equals(Object o) {
