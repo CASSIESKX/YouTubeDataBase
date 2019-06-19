@@ -1,11 +1,16 @@
+/**
+ * HashTable.java
+ * @author Kexin Shu
+ * @author Yunting Lin
+ * CIS 22C, Lab 7
+ */
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class HashTable {
+public class HashTable<T extends Comparable<T>> {
 
 	private int numElements;
-	private ArrayList<List> Table;
-	private boolean isPrimaryKey;
+	private ArrayList<List<T>> Table;
 
 	/**
 	 * Constructor for the HashTable.java class. Initializes the Table to be sized
@@ -14,15 +19,15 @@ public class HashTable {
 	 * 
 	 * @param size the table size
 	 */
-	public HashTable(int size, boolean isPrimaryKey) {
+	public HashTable(int size) {
 		// The table is an arraylist of list
-		Table = new ArrayList<List>(size);
+		Table = new ArrayList<List<T>>(size);
+		int count = size;
 		while (size > 0) {
-			Table.add(new List(isPrimaryKey));
+			Table.add(new List<T>());
 			size--;
 		}
 		numElements = 0;
-		this.isPrimaryKey = isPrimaryKey;
 	}
 
 	/** Accessors */
@@ -33,13 +38,8 @@ public class HashTable {
 	 * @param t the Object
 	 * @return the index in the Table
 	 */
-	private int hash(Video t) {
-		int code;
-		if (isPrimaryKey) {
-			code = t.hashCodeByUrl();
-		} else {
-			code = t.hashCodeByVideoName();
-		}
+	private int hash(T t) {
+		int code = t.hashCode();
 		return code % Table.size();
 	}
 
@@ -54,7 +54,7 @@ public class HashTable {
 	public int countBucket(int index) throws IndexOutOfBoundsException {
 		// Handle Precondition
 		if (index < 0 || index > Table.size()) {
-			throw new IndexOutOfBoundsException("countBucket: Index out of bound.\n");
+			throw new IndexOutOfBoundsException("countBucket: Index out of bound.");
 		}
 		return Table.get(index).getLength();
 	}
@@ -76,12 +76,17 @@ public class HashTable {
 	 * searches for a specified element in the Table
 	 * 
 	 * @param t the element to search for
-	 * @return 
+	 * @return the index in the Table (0 to Table.length - 1) or -1 if t is not in
 	 *         the Table
 	 */
-	public ArrayList<Video> search(Video t) {
-		int index = hash(t);
-    	return Table.get(index).linearSearch(t);
+	public int search(T t) {
+		for (int i = 0; i < Table.size(); i++) {
+			if (Table.get(i).linearSearch(t) != -1) {
+				return i;
+			}
+		}
+		// Not in the table
+		return -1;
 	}
 
 	/** Manipulation Procedures */
@@ -92,11 +97,11 @@ public class HashTable {
 	 * 
 	 * @param t the element to insert
 	 */
-	public void insert(Video t) {
-		numElements++;
+	public void insert(T t) {
 		// calls the hash method to determine placement
 		int index = hash(t);
 		Table.get(index).addLast(t);
+		numElements++;
 	}
 
 	/**
@@ -107,18 +112,20 @@ public class HashTable {
 	 * @precondition t must be in the table
 	 * @throws NoSuchElementException when the element is not in the table
 	 */
-	public void remove(Video t) throws NoSuchElementException {
-		if (search(t).size() == 0) {
+	public void remove(T t) throws NoSuchElementException {
+		if (search(t) == -1) {
 			throw new NoSuchElementException("remove: Cannot remove when the element is not in the table");
 		}
 		// calls the hash method on the key to get the placement
 		int index = hash(t);
-    	List L = Table.get(index);
-    	L.placeIterator();
-    	while(L.getIterator().compareTo(t) != 0) {
-    		L.advanceIterator();
-    	}
-    	L.removeIterator();
+		// remove the element
+		int indexInList = Table.get(index).linearSearch(t);
+		// Place the iterator
+		Table.get(index).placeIterator();
+		// Advance the iterator to the indexInList
+		Table.get(index).advanceToIndex(indexInList);
+		// Delete the element
+		Table.get(index).removeIterator();
 		// Decrement the size
 		numElements--;
 	}
@@ -140,7 +147,7 @@ public class HashTable {
     	if(bucket < 0 || bucket > Table.size()) {
     		throw new IndexOutOfBoundsException ("printBucket: Index Out Of Bounds. \n");
     	}
-    		System.out.println("Printing bucket #" + bucket +": ");
+    		System.out.println("Printing bucket: " + bucket);
 			System.out.println(Table.get(bucket).toString());
     }
 
@@ -156,20 +163,20 @@ public class HashTable {
     public void printTable(){
         for(int i = 0 ; i < Table.size(); i++) {
         	if(Table.get(i).getLength() == 0) {
-        		continue;
+        		System.out.print("Bucket: " + i);
+        		System.out.print("\nThis bucket is empty.");
+        		System.out.println();
+        		System.out.println();
         	}else{
-        		List l = Table.get(i);
-        		l.placeIterator();
-        		for (int j = 0; j < l.getLength(); j++) {
-        			System.out.print(l.getIterator());
-        			l.advanceIterator();
-        		}
+        		Table.get(i).placeIterator();
+        		T temp = Table.get(i).getIterator();
+        		int numEle = Table.get(i).getLength() -1;
+        		System.out.print("\nBucket: " + i);
+        		System.out.print(temp.toString());
+        		System.out.println("\n+ " + numEle + " more at this bucket. \n");
         	}
         }
      }
-    
-    public List getElement(int bucket){
-    	return Table.get(bucket);
-    } 
+
 	
 }
