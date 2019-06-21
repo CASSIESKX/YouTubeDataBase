@@ -1,11 +1,11 @@
 YoutubeDataBase
 Important note:
 Here is how we divide roles to each teammate:
-Daniel Songer - Project coordinator, debugger (also responsible for the live demo part).
+Daniel Songer - Project coordinator, implemented functions in YouTubeDataBase.java (also responsible for the live demo part).
 Kexin Shu - YoutubeDataBase.java (UI part and progarm structure design) and implementations of HashTable and BST classes
 Jiazhi Wang - Video.java (Designed/implemented required reatures) & Debugging
 Susan Chen - YoutubeDataBase.java (File processing part) and BST, HashTable design/revision
-Yunting Lin - Data Structure Orgarnizing, debugging, and testing.
+Yunting Lin - Data Structure Orgarnizing (BST, HashTable, List), debugging, and testing.
 
 What does the program do:
 Similar to any database, our program supports data adding, deleting, searching, and file processing. 
