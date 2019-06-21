@@ -12,7 +12,7 @@ Similar to any database, our program supports data adding, deleting, searching, 
 
 How to run the code:
 Our porgram has straighfoward instructions when you run it.
-Following is our menu, and the use will know what is going on while runnning since we also provide instructions/directions for every step.
+Following text is our menu, and the user will know what is going on while runnning since we also provide instructions/directions for every step.
 
 Welcome to the YouTube DataBase! 
 We are now reading data from our database...
